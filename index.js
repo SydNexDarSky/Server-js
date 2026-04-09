@@ -1,15 +1,22 @@
 const express = require("express");
+const { logger, logEvents } = require('./middleware/logger')
+
 
 const app = express();
 const PORT = 5000
 
-// Middlewares
+console.log(process.env.NODE_ENV)
+
+connectDB()
+
+app.use(logger)
+
+app.use(cors(corsOptions))
+
 app.use(express.json())
 
 // Routes
-app.get('/', (req, res) => {
-	res.send('Server is running')
-})
+app.use('/', require('./routes/root'))
 
 app.get('/api/test', (req, res) => {
 	res.json({ message: 'API is working'})
