@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
+const verifyToken = require("../middlewares/verifyToken");
+
 const {
   getMentors,
   getMentorProfile
 } = require("../controllers/mentor.controller.js");
 
-router.get("/", getMentors);
-router.get("/:id", getMentorProfile);
+// PROTECTED ROUTES
+router.get("/", verifyToken, getMentors);
+router.get("/:id", verifyToken, getMentorProfile);
 
 module.exports = router;

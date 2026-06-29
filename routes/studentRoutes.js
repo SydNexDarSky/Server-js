@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const verifyToken = require("../middlewares/verifyToken");
+
 const {
   getStudents,
   getStudentById,
@@ -8,9 +10,10 @@ const {
   deleteStudent
 } = require("../controllers/student.controller.js");
 
-router.get("/", getStudents);
-router.get("/:id", getStudentById);
-router.put("/:id", updateStudent);
-router.delete("/:id", deleteStudent);
+// PROTECTED ROUTES
+router.get("/", verifyToken, getStudents);
+router.get("/:id", verifyToken, getStudentById);
+router.put("/:id", verifyToken, updateStudent);
+router.delete("/:id", verifyToken, deleteStudent);
 
 module.exports = router;

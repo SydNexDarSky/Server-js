@@ -4,30 +4,51 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
+
 const corsOptions = require("./config/corsOptions");
 const { logger } = require("./middlewares/logger");
 
 const PORT = process.env.PORT || 3500;
 
+// =========================
+// MIDDLEWARES
+// =========================
 app.use(logger);
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// =========================
 // ROUTES
+// =========================
+
+// Root route
 app.use("/", require("./routes/root"));
+
+// AUTH ROUTES (IMPORTANT - ADD THIS)
+app.use("/auth", require("./routes/authRoutes"));
+
+// PROTECTED USER ROUTES
 app.use("/students", require("./routes/studentRoutes"));
 app.use("/mentors", require("./routes/mentorRoutes"));
 
+// Test route
 app.get("/api/test", (req, res) => {
   res.json({ message: "API is working" });
 });
 
+// =========================
 // 404 HANDLER
+// =========================
 app.all(/.*/, (req, res) => {
-  res.status(404).json({ message: "Route not found" });
+  res.status(404).json({
+    success: false,
+    message: "Route not found"
+  });
 });
 
-// SERVER
+// =========================
+// SERVER START
+// =========================
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
